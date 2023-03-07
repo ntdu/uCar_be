@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  db:
+    image: 'postgres'
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d/
+    ports:
+      - "5432:5432"
+    networks:
+      - rest_data_api
+
+  ucar-api:
+    build: .
+    command: uvicorn main:app --host 0.0.0.0
+    volumes:
+      - .:/app
+    ports:
+      - "80:8000"
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+    networks:
+      - rest_data_api
+
+volumes:
+  db:
+    driver: local
+networks:
+  rest_data_api:

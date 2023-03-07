@@ -26,6 +26,19 @@ def get_carmodel(id: str, db: Session = Depends(get_db)):
                             detail=f"No carmodel with this id: {id} found")
     return carmodel
 
+@router.get('/carbrands/{carbrand_id}', response_model=schemas.ListCarModelResponse)
+def get_carmodel_by_carbrand(carbrand_id: str, db: Session = Depends(get_db), limit: int = 10, page: int = 1):
+    skip = (page - 1) * limit
+
+    carbrand = db.query(models.CarBrand).filter(models.CarBrand.id == carbrand_id).first()
+    if not carbrand:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"No carbrand with this id: {carbrand_id} found")
+
+    carmodels = db.query(models.CarModel).filter(
+        models.CarModel.carbrand_id == carbrand_id).limit(limit).offset(skip).all()
+    return {'status': 'success', 'results': len(carmodels), 'carmodels': carmodels}
+
 @router.post('/', status_code=status.HTTP_201_CREATED, response_model=schemas.CarModelResponse)
 def create_carmodel(carmodel: schemas.CarModelBaseSchema, db: Session = Depends(get_db)):
     carbrand = db.query(models.CarBrand).filter(models.CarBrand.id == carmodel.carbrand_id).first()

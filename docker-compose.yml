@@ -12,7 +12,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - rest_data_api
+      - ucar_api
 
   ucar-api:
     build: .
@@ -26,10 +26,10 @@ services:
     env_file:
       - ./.env
     networks:
-      - rest_data_api
+      - ucar_api
 
 volumes:
   db:
     driver: local
 networks:
-  rest_data_api:
+  ucar_api:

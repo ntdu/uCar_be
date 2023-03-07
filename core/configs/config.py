@@ -6,6 +6,7 @@ class Settings(BaseSettings):
 
     POSTGRES_HOST: str
     POSTGRES_DB: str
+    POSTGRES_PORT: int
     DB_USER: str
     DB_PASSWORD: str
     DBTYPE: str

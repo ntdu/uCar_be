@@ -3,7 +3,7 @@ import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 
 from core.configs import settings
-from core.routers import carbrand_routers, carmodel_routers
+from core.routers import carbrands_routers, carmodels_routers
 
 app = FastAPI()
 
@@ -20,11 +20,11 @@ app.add_middleware(
 )
 
 
-app.include_router(carbrand_routers.router, tags=['Car Brand'], prefix='/api/brands')
-app.include_router(carmodel_routers.router, tags=['Car Model'], prefix='/api/models')
+app.include_router(carbrands_routers.router, tags=['Car'], prefix='/api/carbrands')
+app.include_router(carmodels_routers.router, tags=['Car'], prefix='/api/carmodels')
 
 
-@app.get('/api/car')
+@app.get('/api')
 def root():
     return {'message': 'Hello World'}
 
